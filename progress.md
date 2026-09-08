@@ -6,3 +6,5 @@
 - 2026-09-09: Excluded local visual-check metadata from the public artifact set.
 - 2026-09-09: Built the static landing page, published artifact layout, metadata, and recovery runbook.
 - 2026-09-09: Validated the landing page and all three diagrams with Chromium; JSON specs parse successfully.
+- 2026-09-09: Created and pushed the public GitHub repository.
+- 2026-09-09: Enabled HTTPS GitHub Pages and verified the first deployment in Chromium.

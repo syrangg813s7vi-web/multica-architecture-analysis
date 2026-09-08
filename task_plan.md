@@ -10,7 +10,7 @@ Publish the existing Multica source analysis in a new public GitHub repository a
 - [x] 2. Audit and sanitize public content.
 - [x] 3. Build a reproducible static documentation site.
 - [x] 4. Validate links, rendering, and generated artifacts locally.
-- [ ] 5. Create the public GitHub repository and push the initial revision.
+- [x] 5. Create the public GitHub repository and push the initial revision.
 - [ ] 6. Enable GitHub Pages and verify the public URL.
 - [ ] 7. Record recovery/rebuild instructions and final evidence.
 
@@ -20,6 +20,7 @@ Publish the existing Multica source analysis in a new public GitHub repository a
 - Keep the analyzed upstream repository and commit SHA visible for reproducibility.
 - Use a static site with no secrets or runtime database.
 - Use GitHub Pages for low-friction public browsing.
+- Keep the publication repository independent from the upstream source repository.
 
 ## Errors encountered
 
