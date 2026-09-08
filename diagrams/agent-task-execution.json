@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "Agent 任务执行时序",
+    "locale": "zh-CN",
+    "output": "agent-task-execution.html",
+    "viewBox": [920, 480],
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "legend": { "mode": "hidden" },
+    "views": [
+      { "id": "enqueue", "label": "持久化排队", "focus": ["trigger", "server", "db"], "note": "人工、渠道或 Autopilot 触发先落入数据库任务队列。" },
+      { "id": "claim", "label": "租约与准备", "focus": ["server", "db", "daemon", "env"], "note": "在线 daemon Claim 后，服务端下发绑定任务的启动载荷。" },
+      { "id": "execute", "label": "Agent 执行", "focus": ["env", "agent", "external", "server"], "note": "Agent 在任务目录运行，并用任务 Token 回写消息和结果。" }
+    ]
+  },
+  "participants": [
+    { "id": "trigger", "type": "external", "label": "触发方", "sublabel": "用户 / 渠道 / 自动化" },
+    { "id": "server", "type": "backend", "label": "API Server", "sublabel": "Task + Daemon WS" },
+    { "id": "db", "type": "database", "label": "PostgreSQL", "sublabel": "agent_task_queue" },
+    { "id": "daemon", "type": "backend", "label": "Daemon", "sublabel": "机器执行控制器" },
+    { "id": "env", "type": "backend", "label": "任务环境", "sublabel": "Worktree + Context" },
+    { "id": "agent", "type": "backend", "label": "Agent CLI", "sublabel": "NDJSON / ACP" },
+    { "id": "external", "type": "external", "label": "Git 与工具", "sublabel": "VCS / MCP / Provider" }
+  ],
+  "segments": [
+    { "from": 150, "to": 230, "label": "入队与 Claim" },
+    { "from": 238, "to": 320, "label": "环境准备与执行" },
+    { "from": 328, "to": 404, "label": "回写与收尾" }
+  ],
+  "messages": [
+    { "from": "trigger", "to": "server", "y": 160, "label": "分配 / @提及 / Trigger", "variant": "emphasis" },
+    { "from": "server", "to": "db", "y": 189, "label": "创建 queued 任务", "variant": "emphasis" },
+    { "from": "daemon", "to": "server", "y": 218, "label": "Heartbeat + Claim", "variant": "security" },
+    { "from": "server", "to": "daemon", "y": 247, "label": "StartTask + 任务 Token", "variant": "security" },
+    { "from": "daemon", "to": "env", "y": 276, "label": "Worktree / Context / Skills / MCP", "variant": "emphasis" },
+    { "from": "env", "to": "agent", "y": 305, "label": "启动或恢复 Agent", "variant": "emphasis" },
+    { "from": "agent", "to": "external", "y": 334, "label": "Git / MR / MCP 调用与结果", "variant": "default" },
+    { "from": "agent", "to": "server", "y": 363, "label": "任务 Token：消息 / 使用量 / 产物", "variant": "security" },
+    { "from": "server", "to": "db", "y": 392, "label": "终态、事件与会话信息", "variant": "emphasis" }
+  ],
+  "activations": [
+    { "participant": "server", "from": 156, "to": 400, "type": "backend" },
+    { "participant": "db", "from": 185, "to": 400, "type": "database" },
+    { "participant": "daemon", "from": 214, "to": 284, "type": "backend" },
+    { "participant": "env", "from": 272, "to": 313, "type": "backend" },
+    { "participant": "agent", "from": 301, "to": 371, "type": "backend" },
+    { "participant": "external", "from": 330, "to": 342, "type": "external" }
+  ]
+}

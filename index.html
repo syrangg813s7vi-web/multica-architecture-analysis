@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Multica 全仓库静态架构分析、执行时序与任务生命周期。">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%2307111f%22/><path d=%22M15 45V19h8l9 13 9-13h8v26h-8V31l-9 12-9-12v14z%22 fill=%22%235ee5d5%22/></svg>">
+  <title>Multica · Architecture Analysis</title>
+  <style>
+    :root{color-scheme:dark;--bg:#07111f;--panel:#0d1b2d;--line:#213654;--ink:#f4f7fb;--muted:#a7b6ca;--cyan:#5ee5d5;--blue:#75a7ff;--amber:#ffc66d}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 80% 0,#17375b 0,transparent 32rem),linear-gradient(180deg,#07111f,#091522 60%,#07111f);color:var(--ink);font:16px/1.7 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    a{color:inherit}.shell{width:min(1180px,calc(100% - 40px));margin:auto}.top{display:flex;justify-content:space-between;align-items:center;padding:24px 0;color:var(--muted)}.brand{font-weight:760;letter-spacing:.02em;color:var(--ink)}.tag{border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:13px}
+    .hero{padding:86px 0 64px}.eyebrow{color:var(--cyan);font-size:13px;font-weight:750;letter-spacing:.15em;text-transform:uppercase}.hero h1{max-width:900px;margin:14px 0 20px;font-size:clamp(42px,7vw,82px);line-height:1.02;letter-spacing:-.055em}.hero p{max-width:760px;margin:0;color:var(--muted);font-size:clamp(18px,2.3vw,23px)}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}.button{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border:1px solid var(--line);border-radius:10px;text-decoration:none;font-weight:720}.button.primary{background:var(--ink);color:#07111f;border-color:var(--ink)}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0 74px}.stat{padding:22px;border:1px solid var(--line);border-radius:14px;background:rgba(13,27,45,.8)}.stat strong{display:block;font-size:28px;color:var(--cyan)}.stat span{color:var(--muted);font-size:14px}
+    h2{font-size:clamp(29px,4vw,45px);letter-spacing:-.035em;margin:0 0 12px}.lead{color:var(--muted);max-width:700px;margin:0 0 28px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{overflow:hidden;border:1px solid var(--line);border-radius:16px;background:var(--panel);text-decoration:none;transition:.2s transform,.2s border-color}.card:hover{transform:translateY(-4px);border-color:var(--blue)}.card img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;border-bottom:1px solid var(--line)}.card-copy{padding:20px}.card h3{margin:0 0 7px;font-size:20px}.card p{margin:0;color:var(--muted);font-size:14px}
+    .summary{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin:82px 0}.summary>div{padding:28px;border:1px solid var(--line);border-radius:16px;background:rgba(13,27,45,.72)}.summary ul{padding-left:20px;color:var(--muted)}.summary li+li{margin-top:10px}.risk{color:var(--amber)}code{color:var(--cyan)}footer{border-top:1px solid var(--line);padding:28px 0 46px;color:var(--muted);font-size:14px}
+    @media(max-width:820px){.stats{grid-template-columns:repeat(2,1fr)}.cards,.summary{grid-template-columns:1fr}.hero{padding-top:58px}}@media(max-width:480px){.shell{width:min(100% - 24px,1180px)}.stats{grid-template-columns:1fr 1fr}.stat{padding:16px}.top .tag{display:none}}
+  </style>
+</head>
+<body>
+  <header class="shell top"><div class="brand">MULTICA / ARCHITECTURE</div><div class="tag">Static analysis · c1a61e1</div></header>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">Repository field guide</div>
+      <h1>从控制平面，到每一次 Agent 执行。</h1>
+      <p>一份可验证、可追溯的 Multica 全仓库架构分析，覆盖任务编排、远程 daemon、Git worktree、Runtime、Skills、插件、VCS、安全与部署。</p>
+      <div class="actions">
+        <a class="button primary" href="analysis/">阅读完整报告 →</a>
+        <a class="button" href="https://github.com/multica-ai/multica/tree/c1a61e1e863eb62ddd7b5fd5ab5ff85391f212fd">查看分析基线</a>
+      </div>
+    </section>
+    <section class="stats" aria-label="仓库规模">
+      <div class="stat"><strong>≈107万</strong><span>Go / TS / TSX 行数</span></div>
+      <div class="stat"><strong>3</strong><span>交互式架构视图</span></div>
+      <div class="stat"><strong>888</strong><span>Go 测试文件</span></div>
+      <div class="stat"><strong>650</strong><span>TS / TSX 测试文件</span></div>
+    </section>
+    <section>
+      <h2>三张图，建立系统心智模型</h2>
+      <p class="lead">点击卡片进入可缩放、可查看源码证据的独立视图。</p>
+      <div class="cards">
+        <a class="card" href="diagrams/system-architecture.html"><img src="assets/previews/system-architecture.png" alt="Multica 系统架构预览"><div class="card-copy"><h3>系统全景架构</h3><p>客户端、控制平面、执行平面、数据与外部集成。</p></div></a>
+        <a class="card" href="diagrams/agent-task-execution.html"><img src="assets/previews/agent-task-execution.png" alt="Agent 任务执行时序预览"><div class="card-copy"><h3>Agent 执行时序</h3><p>从任务创建、Claim、环境准备到结果持久化。</p></div></a>
+        <a class="card" href="diagrams/task-lifecycle.html"><img src="assets/previews/task-lifecycle.png" alt="任务生命周期预览"><div class="card-copy"><h3>任务生命周期</h3><p>排队、派发、运行、重试、取消与终态恢复。</p></div></a>
+      </div>
+    </section>
+    <section class="summary">
+      <div><h2>一句话判断</h2><p>Multica 是面向软件团队的 <strong>Agent 控制平面 + 分布式执行平面</strong>，并不是另一个 ChatGPT UI。</p><p><a class="button" href="analysis/#13-低摩擦改进建议">查看低摩擦改进建议 →</a></p></div>
+      <div><h2>先关注的边界</h2><ul><li><span class="risk">Daemon 不是安全沙箱</span>，强隔离需要专用用户、容器或 VM。</li><li>自托管部署仍需补齐数据库、对象存储和密钥的灾备闭环。</li><li>企业 VCS 能 clone，不代表天然支持 MR、评论、状态回写与 Webhook。</li></ul></div>
+    </section>
+  </main>
+  <footer><div class="shell">独立技术分析 · 基于公开源码的固定 commit · 非 Multica 官方文档</div></footer>
+</body>
+</html>

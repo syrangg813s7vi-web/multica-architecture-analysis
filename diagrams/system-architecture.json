@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Multica 系统全景架构",
+    "locale": "zh-CN",
+    "output": "system-architecture.html",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/multica-ai/multica",
+      "revision": "c1a61e1e863eb62ddd7b5fd5ab5ff85391f212fd"
+    },
+    "viewBox": [1390, 820],
+    "views": [
+      { "id": "control", "label": "控制平面", "focus": ["clients", "api", "postgres", "redis", "storage"], "note": "客户端请求进入 API，并落入关系数据、实时协调和对象存储。" },
+      { "id": "execution", "label": "执行平面", "focus": ["api", "daemon", "taskenv", "agentcli", "external"], "note": "服务端派发任务，daemon 构建隔离工作区并启动 Agent CLI。" },
+      { "id": "trust", "label": "信任边界", "focus": ["actors", "clients", "api", "daemon", "agentcli", "external", "plugins"], "note": "浏览器、daemon、任务和插件分别使用不同凭据与授权边界。" }
+    ]
+  },
+  "components": [
+    { "id": "actors", "type": "external", "label": "用户与自动触发器", "sublabel": "浏览器 / Webhook / Schedule", "pos": [40, 260], "size": [170, 72] },
+    { "id": "clients", "type": "frontend", "label": "客户端应用", "sublabel": "Web / Desktop / Mobile", "pos": [270, 260], "size": [180, 72], "sources": [{ "path": "apps/web/app/layout.tsx" }, { "path": "apps/desktop/src/main/index.ts" }, { "path": "apps/mobile/app/_layout.tsx" }] },
+    { "id": "api", "type": "backend", "label": "Multica API Server", "sublabel": "HTTP / WebSocket / Scheduler", "pos": [530, 260], "size": [190, 72], "sources": [{ "path": "server/cmd/server/main.go" }, { "path": "server/internal/handler/handler.go" }] },
+    { "id": "postgres", "type": "database", "label": "PostgreSQL + pgvector", "sublabel": "领域状态与任务队列", "pos": [800, 90], "size": [190, 72], "sources": [{ "path": "server/migrations/001_init.up.sql" }, { "path": "server/pkg/db/queries/agent.sql" }] },
+    { "id": "redis", "type": "messagebus", "label": "Redis（可选）", "sublabel": "实时 relay / 租约协调", "pos": [800, 260], "size": [180, 72], "sources": [{ "path": "server/internal/daemonws/hub.go" }] },
+    { "id": "storage", "type": "cloud", "label": "对象存储", "sublabel": "Local / S3 / CloudFront", "pos": [800, 420], "size": [180, 72], "sources": [{ "path": "server/internal/storage/storage.go" }] },
+    { "id": "daemon", "type": "backend", "label": "Multica Daemon", "sublabel": "机器注册 / Claim / RPC", "pos": [530, 580], "size": [190, 72], "sources": [{ "path": "server/internal/daemon/daemon.go" }, { "path": "server/internal/handler/daemon.go" }] },
+    { "id": "taskenv", "type": "backend", "label": "任务执行环境", "sublabel": "Worktree / Context / Skills / MCP", "pos": [800, 580], "size": [210, 72], "sources": [{ "path": "server/internal/daemon/execenv/execenv.go" }, { "path": "server/internal/daemon/repocache/cache.go" }] },
+    { "id": "agentcli", "type": "backend", "label": "Agent Runtime", "sublabel": "CLI NDJSON / ACP JSON-RPC", "pos": [1050, 580], "size": [190, 72], "sources": [{ "path": "server/pkg/agent/agent.go" }, { "path": "server/pkg/agent/qwenpaw.go" }] },
+    { "id": "external", "type": "external", "label": "VCS、IM 与工具", "sublabel": "GitHub / GitLab / Slack / MCP", "pos": [1170, 90], "size": [190, 72], "sources": [{ "path": "server/internal/integrations/vcs/vcs.go" }, { "path": "server/internal/integrations/slack/slack_channel.go" }] },
+    { "id": "plugins", "type": "external", "label": "插件服务", "sublabel": "Hooks / Actions / MCP", "pos": [1170, 370], "size": [180, 72], "sources": [{ "path": "server/pkg/plugincontract/manifest.go" }, { "path": "server/internal/service/plugin.go" }] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Multica 控制平面", "wraps": ["clients", "api", "postgres", "redis", "storage"], "pad": 30 },
+    { "kind": "security-group", "label": "执行主机（需外部 OS / 容器隔离）", "wraps": ["daemon", "taskenv", "agentcli"], "pad": 28 }
+  ],
+  "connections": [
+    { "id": "use-clients", "from": "actors", "to": "clients", "label": "交互与触发", "variant": "emphasis" },
+    { "id": "clients-api", "from": "clients", "to": "api", "label": "REST + WebSocket", "variant": "emphasis", "labelAt": [490, 346] },
+    { "id": "api-postgres", "from": "api", "to": "postgres", "label": "SQL / 事务", "fromSide": "right", "toSide": "left", "via": [[750, 296], [750, 126]] },
+    { "id": "api-redis", "from": "api", "to": "redis", "label": "Relay / Lease", "labelAt": [800, 220] },
+    { "id": "api-storage", "from": "api", "to": "storage", "label": "附件与媒体", "fromSide": "right", "toSide": "left", "via": [[750, 296], [750, 456]], "labelAt": [785, 405] },
+    { "id": "api-daemon", "from": "api", "to": "daemon", "label": "WSS Claim / RPC", "variant": "security", "fromSide": "bottom", "toSide": "top", "labelAt": [685, 400] },
+    { "id": "daemon-taskenv", "from": "daemon", "to": "taskenv", "label": "准备与回收", "variant": "emphasis" },
+    { "id": "taskenv-agent", "from": "taskenv", "to": "agentcli", "label": "启动 / 恢复 / 取消", "variant": "emphasis", "labelAt": [1030, 666] },
+    { "id": "agent-api", "from": "agentcli", "to": "api", "label": "任务 Token：消息与结果", "variant": "security", "fromSide": "top", "toSide": "right", "via": [[1145, 500], [740, 500], [740, 296]], "labelAt": [900, 506] },
+    { "id": "api-external", "from": "external", "to": "api", "label": "Webhook / Provider API", "variant": "dashed", "fromSide": "left", "toSide": "top", "via": [[1100, 126], [1100, 40], [625, 40]], "labelAt": [920, 32] },
+    { "id": "agent-external", "from": "agentcli", "to": "external", "label": "Git / Tool API", "variant": "dashed", "fromSide": "right", "toSide": "right", "via": [[1380, 616], [1380, 126]], "labelAt": [1350, 340] },
+    { "id": "plugins-api", "from": "plugins", "to": "api", "label": "签名 Hook / Action API", "variant": "security", "fromSide": "right", "toSide": "right", "via": [[1370, 406], [1370, 540], [740, 540], [740, 296]], "labelAt": [1060, 530] }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "核心边界", "items": ["Server 负责协作状态和派发；Daemon 负责机器与进程", "Agent 只拿任务绑定的短期权限"] },
+    { "dot": "emerald", "title": "并行执行", "items": ["远程仓库使用 bare cache + linked worktree", "本地目录可共享或按任务创建 worktree"] },
+    { "dot": "rose", "title": "关键约束", "items": ["Daemon 本身不提供文件系统沙箱", "生产备份、恢复和执行主机隔离需部署方补齐"] }
+  ]
+}

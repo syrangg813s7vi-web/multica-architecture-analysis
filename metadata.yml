@@ -1,0 +1,8 @@
+project: multica
+upstream_repository: https://github.com/multica-ai/multica
+analyzed_commit: c1a61e1e863eb62ddd7b5fd5ab5ff85391f212fd
+analyzed_commit_date: 2026-08-28
+analysis_type: full-repository-static-architecture
+visibility: public
+generated_at: 2026-09-09
+

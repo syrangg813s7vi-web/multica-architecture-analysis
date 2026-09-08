@@ -1,0 +1,11 @@
+title: Multica Architecture Analysis
+description: Multica 全仓库静态架构分析、执行时序与任务生命周期
+lang: zh-CN
+theme: minima
+markdown: kramdown
+exclude:
+  - task_plan.md
+  - findings.md
+  - progress.md
+  - scripts
+

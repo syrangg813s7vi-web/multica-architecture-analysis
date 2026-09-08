@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "Agent Task Queue 生命周期",
+    "locale": "zh-CN",
+    "output": "task-lifecycle.html",
+    "viewBox": [1040, 630],
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      { "id": "happy", "label": "正常执行", "focus": ["queued", "dispatched", "running", "completed"], "note": "从持久队列经 daemon Claim 进入运行并写入完成终态。" },
+      { "id": "recovery", "label": "终态出口", "focus": ["running", "completed", "failed", "cancelled"], "note": "每个 attempt 进入一个终态；手动重跑会创建新的 queued attempt。" }
+    ]
+  },
+  "lanes": [
+    { "id": "main", "label": "主状态" },
+    { "id": "terminal", "label": "终态" }
+  ],
+  "states": [
+    { "id": "queued", "type": "start", "label": "queued", "sublabel": "已持久化，等待 Claim", "lane": "main", "col": 0, "step": "01", "tag": "queue" },
+    { "id": "dispatched", "type": "active", "label": "dispatched", "sublabel": "Daemon 已领取", "lane": "main", "col": 1, "step": "02", "tag": "lease" },
+    { "id": "running", "type": "active", "label": "running", "sublabel": "Agent 进程执行中", "lane": "main", "col": 2, "step": "03", "tag": "execute" },
+    { "id": "completed", "type": "success", "label": "completed", "sublabel": "结果与事件已落库", "lane": "main", "col": 4, "step": "04", "tag": "terminal" },
+    { "id": "failed", "type": "failure", "label": "failed", "sublabel": "保留失败原因与会话", "lane": "terminal", "col": 0, "tag": "terminal" },
+    { "id": "cancelled", "type": "failure", "label": "cancelled", "sublabel": "用户或系统取消", "lane": "terminal", "col": 1, "tag": "terminal" }
+  ],
+  "transitions": [
+    { "id": "claim", "from": "queued", "to": "dispatched", "label": "Claim", "variant": "emphasis", "labelDy": -28 },
+    { "id": "start-ack", "from": "dispatched", "to": "running", "label": "StartTask", "variant": "emphasis", "labelDy": -28 },
+    { "id": "run-complete", "from": "running", "to": "completed", "label": "完成并持久化", "variant": "emphasis" },
+    { "id": "run-failed", "from": "running", "to": "failed", "label": "执行失败", "variant": "security", "route": "straight", "fromSide": "bottom", "toSide": "top", "labelAt": [347, 202] },
+    { "id": "running-cancel", "from": "running", "to": "cancelled", "label": "取消并撤销 Token", "variant": "security", "fromSide": "right", "toSide": "bottom", "via": [[600, 157], [600, 540], [556, 540]], "labelAt": [650, 420] }
+  ]
+}
