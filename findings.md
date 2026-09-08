@@ -21,3 +21,5 @@
 - GitHub Pages will process `analysis.md` through Jekyll into `/analysis/`; the landing page and diagrams are standalone HTML.
 - The public repository was created successfully and the first Pages build completed from `main` at the repository root.
 - Public Chromium verification confirmed the landing page, rendered Markdown report, and all three diagrams.
+- The verified Pages build for publication content completed successfully at commit `e9984bed352ab2f179359326a77764fd7715b70e`.
+- The repository is the authoritative source; the hosted site is stateless and can be rebuilt from `main` without secrets.
