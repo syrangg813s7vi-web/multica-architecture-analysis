@@ -2,6 +2,8 @@
 
 ## Runtime article
 
+- Live publication succeeded at commit `8959deaffa541790ec4da023ddcac7d32f5052d6`; all five article/asset endpoints returned HTTP 200. Jekyll expanded the project-site base path correctly.
+
 - The article distinguishes platform-to-daemon control from Backend-to-CLI protocol adaptation, with immutable source references at the existing analysis baseline.
 - Reused two previously validated Archify diagrams and their editable JSON specifications; excluded machine-specific visual-check receipts.
 - New public article and diagrams passed the local-path, credential-query, and excluded-topic scan. Recovery remains a stateless Pages rebuild from versioned inputs.

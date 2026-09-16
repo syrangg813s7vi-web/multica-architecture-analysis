@@ -3,7 +3,7 @@
 ## Runtime article publication
 Scope: Chinese article on Runtime, remote daemon and Code Agent integration; explicitly omit Docker. Reuse checked diagrams, add homepage/report links, publish to existing Pages repository. No service changes. Markdown owns narrative; checked JSON owns diagrams; static assets are derived. Acceptance: pinned source references, no credentials/local paths, internal links and live article/images/diagrams verified. Rollback: revert publication commit. Follow existing recovery runbook.
 - [x] Author and audit article/assets.
-- [ ] Publish and verify Pages deployment.
+- [x] Publish and verify Pages deployment.
 
 ## Goal
 
