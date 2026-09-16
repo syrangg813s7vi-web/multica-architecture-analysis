@@ -1,0 +1,30 @@
+{
+ "schema_version":2,"diagram_type":"workflow",
+ "meta":{"title":"一次任务如何交给 Code Agent","locale":"zh-CN","quality_profile":"showcase"},
+ "lanes":[{"id":"setup","label":"发现与绑定"},{"id":"execute","label":"任务执行"},{"id":"return","label":"结果回流"}],
+ "nodes":[
+ {"id":"discover","lane":"setup","col":0,"type":"backend","label":"发现可执行命令","sublabel":"内置发现 / Profile","width":180},
+ {"id":"register","lane":"setup","col":1,"type":"backend","label":"注册 Runtime","sublabel":"daemon · 协议 · 状态","width":180},
+ {"id":"bind","lane":"setup","col":2,"type":"frontend","label":"Agent 绑定 Runtime","sublabel":"设置模型与指令","width":180},
+ {"id":"claim","lane":"execute","col":0,"type":"backend","label":"daemon 领取任务","sublabel":"Runtime 对应执行端","width":180},
+ {"id":"prepare","lane":"execute","col":1,"type":"backend","label":"准备执行上下文","sublabel":"工作目录 · Skills · 环境","width":180},
+ {"id":"resolve","lane":"execute","col":2,"type":"backend","label":"选择 Backend","sublabel":"协议类型决定适配器","width":180},
+ {"id":"launch","lane":"execute","col":3,"type":"external","label":"启动 Code Agent","sublabel":"Execute：新会话或续接","width":180},
+ {"id":"normalize","lane":"return","col":3,"type":"messagebus","label":"解析输出事件","sublabel":"Messages 与 Result","width":180},
+ {"id":"report","lane":"return","col":2,"type":"backend","label":"daemon 上报","sublabel":"消息批次 · 最终状态","width":180},
+ {"id":"display","lane":"return","col":1,"type":"frontend","label":"平台展示结果","sublabel":"过程记录与任务结论","width":180}
+ ],
+ "mainPath":["claim","prepare","resolve","launch","normalize"],
+ "edges":[
+ {"from":"discover","to":"register","label":"命令可用"},
+ {"from":"register","to":"bind","label":"选择执行端"},
+ {"from":"bind","to":"claim","label":"创建并派发任务"},
+ {"from":"claim","to":"prepare","label":"任务载荷"},
+ {"from":"prepare","to":"resolve","label":"prompt 与参数"},
+ {"from":"resolve","to":"launch","label":"CLI 专用协议"},
+ {"from":"launch","to":"normalize","label":"流式输出 / 结束"},
+ {"from":"normalize","to":"report","label":"统一事件","role":"return"},
+ {"from":"report","to":"display","label":"平台 API","role":"return"}
+ ],
+ "cards":[{"dot":"cyan","title":"阅读说明","items":["上排为执行前配置；中排为任务主链；下排为持续回流，不必等执行结束才显示消息。","依据源码 c1a61e1e8；超时、取消与会话恢复失败存在独立处理，本图聚焦主链。"]}]
+}

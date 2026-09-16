@@ -1,5 +1,7 @@
 # Progress
 
+- 2026-09-16: Authored the Runtime and remote Code Agent article, added homepage/report navigation, and reused two validated diagrams. Source baseline is pinned; publication privacy scan and whitespace checks passed. Online deployment verification pending.
+
 - 2026-09-09: Started a standalone public-publication project.
 - 2026-09-09: Selected GitHub Pages as the intended static hosting target.
 - 2026-09-09: Confirmed GitHub authentication and audited all candidate artifacts.

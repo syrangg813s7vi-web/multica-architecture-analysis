@@ -1,5 +1,11 @@
 # Findings
 
+## Runtime article
+
+- The article distinguishes platform-to-daemon control from Backend-to-CLI protocol adaptation, with immutable source references at the existing analysis baseline.
+- Reused two previously validated Archify diagrams and their editable JSON specifications; excluded machine-specific visual-check receipts.
+- New public article and diagrams passed the local-path, credential-query, and excluded-topic scan. Recovery remains a stateless Pages rebuild from versioned inputs.
+
 ## Source artifacts
 
 - Publish the 273-line repository report, three standalone Archify HTML diagrams, three source JSON specs, and three representative preview images.

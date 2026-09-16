@@ -10,6 +10,8 @@ permalink: /analysis/
 
 ## 1. 结论摘要
 
+专题延伸：[Multica 如何通过 Runtime 连接本地与远程 Code Agent]({{ '/runtime-code-agent/' | relative_url }})，附组件架构与执行流程两张交互图。
+
 Multica 不是“另一个 ChatGPT UI”，而是一个面向软件团队的 **Agent 控制平面 + 分布式执行平面**：服务端保存项目、Issue、Chat、Agent、Skill、Autopilot 和任务状态；安装在开发机或服务器上的 daemon 领取任务、准备 Git 工作区和 Agent 配置，再启动外部 Agent CLI。Web、Desktop、Mobile、IM Channel、Webhook 和插件是不同入口，最终汇入同一任务与协作模型。
 
 它已经具备较完整的多 Agent 工程底座：持久任务队列、远端 daemon、多个 Agent Runtime、任务级 Token、Git worktree、会话恢复、Skills、MCP、Autopilot、渠道接入和多 VCS Provider。最明显的能力边界有三项：
@@ -276,4 +278,3 @@ CI 按前端、后端、SQLC、Desktop 和 Mobile 路径过滤：Node 22 构建/
 - 没有启动所有外部 Provider 的真实账号做端到端测试，因此第三方 API 行为以实现和测试契约为准。
 - 没有进行生产负载测试、故障注入或安全渗透测试；性能和安全结论只陈述源码能证明的边界。
 - 仓库开始前已有 `apps/desktop/build/*` 删除状态，本次分析未恢复或修改这些用户变更。
-

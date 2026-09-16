@@ -1,0 +1,26 @@
+{
+ "schema_version":1,"diagram_type":"architecture",
+ "meta":{"title":"Runtime 如何连接 Code Agent","locale":"zh-CN","quality_profile":"showcase","viewBox":[1200,660],"repository":{"url":"https://github.com/multica-ai/multica","revision":"c1a61e1e863eb62ddd7b5fd5ab5ff85391f212fd"}},
+ "components":[
+ {"id":"agentConfig","type":"frontend","label":"Multica Agent 配置","sublabel":"角色 · 模型 · Runtime 绑定","pos":[50,110],"size":[240,80]},
+ {"id":"control","type":"backend","label":"服务端控制面","sublabel":"任务调度 · Runtime 登记","pos":[470,110],"size":[240,80],"sources":[{"path":"server/internal/handler/daemon.go","label":"任务领取接口"}]},
+ {"id":"profile","type":"database","label":"Runtime Profile","sublabel":"协议类型 + 本机命令名","pos":[890,110],"size":[240,80],"sources":[{"path":"server/cmd/multica/cmd_runtime_profile.go","line":20,"label":"自定义执行端配置"}]},
+ {"id":"runner","type":"backend","label":"daemon 任务执行器","sublabel":"领取任务 · 目录与上下文准备","pos":[470,330],"size":[240,80],"sources":[{"path":"server/internal/daemon/daemon.go","line":6639,"label":"解析实际执行程序"}]},
+ {"id":"adapter","type":"backend","label":"Backend 协议适配器","sublabel":"ResolveBackend → Execute","pos":[890,330],"size":[240,80],"sources":[{"path":"server/pkg/agent/agent.go","line":18,"label":"统一执行接口"}]},
+ {"id":"report","type":"messagebus","label":"事件与结果回传","sublabel":"Messages · Result → 平台 API","pos":[50,330],"size":[240,80],"sources":[{"path":"server/internal/daemon/daemon.go","line":8279,"label":"过程消息上报"}]},
+ {"id":"cli","type":"external","label":"Code Agent 子进程","sublabel":"原生 CLI / 兼容协议的内部 CLI","pos":[890,550],"size":[240,80],"sources":[{"path":"server/pkg/agent/codex.go","line":257,"label":"Codex app-server"},{"path":"server/pkg/agent/claude.go","line":716,"label":"Claude stream-json"}]}
+ ],
+ "connections":[
+ {"from":"agentConfig","to":"control","label":"配置与任务"},
+ {"from":"profile","to":"control","label":"注册依据"},
+ {"from":"control","to":"runner","label":"领取：WS RPC / HTTP","labelDy":70},
+ {"from":"runner","to":"adapter","label":"路径 + 协议 + 执行参数"},
+ {"from":"adapter","to":"cli","label":"启动与协议通信","labelDy":70},
+ {"from":"runner","to":"report","label":"消费统一事件与结果"},
+ {"from":"report","to":"control","label":"上报进度与完成状态","fromSide":"top","toSide":"left"}
+ ],
+ "cards":[
+ {"dot":"emerald","title":"执行边界","items":["daemon、Backend 与 CLI 位于执行机器；Runtime 本身是平台记录。","图中为职责划分，不表示容器或安全沙箱。"]},
+ {"dot":"amber","title":"内部 Agent 接入点","items":["兼容已有协议：Profile 替换命令；协议独立：编写转换器或 Backend。","CLI 输出先由 Backend 归一化，再交给 daemon；不是直接调用模型 API。"]}
+ ]
+}
