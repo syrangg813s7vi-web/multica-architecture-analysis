@@ -5,6 +5,7 @@
 - [完整分析报告](analysis.md)
 - [Runtime 与远程 Code Agent 专题](runtime-code-agent.md)
 - [系统全景架构](diagrams/system-architecture.html)
+- [运行时组件与通信关系](diagrams/runtime-components.html)（[Archify JSON](diagrams/runtime-components.json)）
 - [Agent 任务执行时序](diagrams/agent-task-execution.html)
 - [任务生命周期](diagrams/task-lifecycle.html)
 - [恢复与重新部署](docs/disaster-recovery.md)

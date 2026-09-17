@@ -19,12 +19,12 @@ This site is stateless. Its authoritative source is the public Git repository; G
 2. Confirm the expected revision with `git rev-parse HEAD`.
 3. Verify that `index.html`, `analysis.md`, `runtime-code-agent.md`, `diagrams/`, and `assets/previews/` exist.
 4. In repository settings, configure GitHub Pages to deploy from the `main` branch and repository root.
-5. Wait for the Pages deployment, then open the published URL and verify the landing page, report, Runtime article, and five diagrams.
+5. Wait for the Pages deployment, then open the published URL and verify the landing page, report, Runtime article, and six diagrams.
 
 ## Validation
 
 - All reader-facing links return HTTP 200.
-- The landing page shows all three preview cards.
+- The landing page shows all three overview preview cards and the runtime-components preview and link.
 - The report identifies the analyzed upstream commit.
 - The Runtime article renders at `/runtime-code-agent/`, with two previews and links to both interactive diagrams. All URLs must include the project-site base path.
 - Formal publication artifacts contain no credentials or machine-local paths.

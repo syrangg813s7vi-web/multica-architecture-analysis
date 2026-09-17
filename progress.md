@@ -1,5 +1,9 @@
 # Progress
 
+- 2026-09-17: Added homepage navigation, diagram HTML/JSON, preview, and recovery documentation. Local link, privacy, whitespace, browser navigation, mobile viewport, desktop diagram, and console checks passed. Publishing next.
+
+- 2026-09-17: Started TIN-734. Selected the existing static Pages site, preserved its original system overview diagram, and added the validated runtime component diagram under a distinct path. Publication and live verification are pending.
+
 - 2026-09-16: Pages built publication commit `8959deaffa541790ec4da023ddcac7d32f5052d6`. Live article, both preview images, and both interactive diagrams returned HTTP 200. Rendered article content, excluded-topic check and project-relative asset URL passed; source targets and diagram JSON validated. Browser automation timed out twice, so no fresh live visual sign-off is claimed; diagram HTML hashes match previously visually checked originals. Restore drill limited to successful managed Pages rebuild from versioned inputs, not a separate clean-machine clone.
 
 - 2026-09-16: Authored the Runtime and remote Code Agent article, added homepage/report navigation, and reused two validated diagrams. Source baseline is pinned; publication privacy scan and whitespace checks passed. Online deployment verification pending.

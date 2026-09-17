@@ -1,5 +1,12 @@
 # Findings
 
+## Runtime component diagram
+
+- The existing site already has a broader system overview diagram, so the new runtime view uses a distinct URL and leaves earlier diagrams unchanged.
+- The Archify HTML and JSON hashes match the validated source artifacts; the PNG preview is versioned with them.
+- The static homepage link reaches the interactive diagram in Chromium at mobile width. The diagram renders at desktop width with no browser console errors; local HTML and PNG endpoints return HTTP 200.
+- The new public assets contain no machine-local path, localhost URL, or credential marker in the targeted privacy scan.
+
 ## Runtime article
 
 - Live publication succeeded at commit `8959deaffa541790ec4da023ddcac7d32f5052d6`; all five article/asset endpoints returned HTTP 200. Jekyll expanded the project-site base path correctly.

@@ -14,7 +14,8 @@
     .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0 74px}.stat{padding:22px;border:1px solid var(--line);border-radius:14px;background:rgba(13,27,45,.8)}.stat strong{display:block;font-size:28px;color:var(--cyan)}.stat span{color:var(--muted);font-size:14px}
     h2{font-size:clamp(29px,4vw,45px);letter-spacing:-.035em;margin:0 0 12px}.lead{color:var(--muted);max-width:700px;margin:0 0 28px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{overflow:hidden;border:1px solid var(--line);border-radius:16px;background:var(--panel);text-decoration:none;transition:.2s transform,.2s border-color}.card:hover{transform:translateY(-4px);border-color:var(--blue)}.card img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;border-bottom:1px solid var(--line)}.card-copy{padding:20px}.card h3{margin:0 0 7px;font-size:20px}.card p{margin:0;color:var(--muted);font-size:14px}
     .summary{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin:82px 0}.summary>div{padding:28px;border:1px solid var(--line);border-radius:16px;background:rgba(13,27,45,.72)}.summary ul{padding-left:20px;color:var(--muted)}.summary li+li{margin-top:10px}.risk{color:var(--amber)}code{color:var(--cyan)}footer{border-top:1px solid var(--line);padding:28px 0 46px;color:var(--muted);font-size:14px}
-    @media(max-width:820px){.stats{grid-template-columns:repeat(2,1fr)}.cards,.summary{grid-template-columns:1fr}.hero{padding-top:58px}}@media(max-width:480px){.shell{width:min(100% - 24px,1180px)}.stats{grid-template-columns:1fr 1fr}.stat{padding:16px}.top .tag{display:none}}
+    .feature{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:center;gap:32px;margin-top:70px}.feature img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:8px}.feature .lead{margin-bottom:22px}
+    @media(max-width:820px){.stats{grid-template-columns:repeat(2,1fr)}.cards,.summary,.feature{grid-template-columns:1fr}.hero{padding-top:58px}.feature{gap:20px}}@media(max-width:480px){.shell{width:min(100% - 24px,1180px)}.stats{grid-template-columns:1fr 1fr}.stat{padding:16px}.top .tag{display:none}}
   </style>
 </head>
 <body>
@@ -26,12 +27,13 @@
       <p>一份可验证、可追溯的 Multica 全仓库架构分析，覆盖任务编排、远程 daemon、Git worktree、Runtime、Skills、插件、VCS、安全与部署。</p>
       <div class="actions">
         <a class="button primary" href="analysis/">阅读完整报告 →</a>
+        <a class="button" href="diagrams/runtime-components.html">查看运行时组件图 →</a>
         <a class="button" href="https://github.com/multica-ai/multica/tree/c1a61e1e863eb62ddd7b5fd5ab5ff85391f212fd">查看分析基线</a>
       </div>
     </section>
     <section class="stats" aria-label="仓库规模">
       <div class="stat"><strong>≈107万</strong><span>Go / TS / TSX 行数</span></div>
-      <div class="stat"><strong>5</strong><span>交互式架构视图</span></div>
+      <div class="stat"><strong>6</strong><span>交互式架构视图</span></div>
       <div class="stat"><strong>888</strong><span>Go 测试文件</span></div>
       <div class="stat"><strong>650</strong><span>TS / TSX 测试文件</span></div>
     </section>
@@ -43,6 +45,14 @@
         <a class="card" href="diagrams/agent-task-execution.html"><img src="assets/previews/agent-task-execution.png" alt="Agent 任务执行时序预览"><div class="card-copy"><h3>Agent 执行时序</h3><p>从任务创建、Claim、环境准备到结果持久化。</p></div></a>
         <a class="card" href="diagrams/task-lifecycle.html"><img src="assets/previews/task-lifecycle.png" alt="任务生命周期预览"><div class="card-copy"><h3>任务生命周期</h3><p>排队、派发、运行、重试、取消与终态恢复。</p></div></a>
       </div>
+    </section>
+    <section class="feature">
+      <div>
+        <h2>运行时组件如何交互</h2>
+        <p class="lead">Web、桌面端、移动端经 Go API 进入控制平面；PostgreSQL 持久化状态，本地 daemon 领取任务并启动 Agent CLI。图中同时标出可选的 Redis 和附件存储。</p>
+        <a class="button primary" href="diagrams/runtime-components.html">打开交互图 →</a>
+      </div>
+      <a href="diagrams/runtime-components.html" aria-label="打开运行时组件交互图"><img src="assets/previews/runtime-components.png" alt="Multica 运行时组件与通信关系预览"></a>
     </section>
     <section style="margin-top:64px">
       <h2>专题：Runtime 如何连接 Code Agent</h2>

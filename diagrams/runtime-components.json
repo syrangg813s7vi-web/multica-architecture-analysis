@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Multica 整体运行架构",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [1390, 640],
+    "repository": {
+      "url": "https://github.com/multica-ai/multica",
+      "revision": "c1a61e1e863eb62ddd7b5fd5ab5ff85391f212fd"
+    }
+  },
+  "components": [
+    { "id": "webClient", "type": "frontend", "label": "Web 客户端", "sublabel": "Next.js", "pos": [60, 100], "size": [230, 82], "sources": [{ "path": "apps/web/package.json", "label": "Web 应用" }] },
+    { "id": "desktopClient", "type": "frontend", "label": "桌面客户端", "sublabel": "Electron", "pos": [60, 225], "size": [230, 82], "sources": [{ "path": "apps/desktop/package.json", "label": "桌面应用" }] },
+    { "id": "mobileClient", "type": "frontend", "label": "移动客户端", "sublabel": "Expo / React Native", "pos": [60, 350], "size": [230, 82], "sources": [{ "path": "apps/mobile/package.json", "label": "移动应用" }] },
+    { "id": "apiServer", "type": "backend", "label": "Go API 服务", "sublabel": "Chi · 业务逻辑 · 实时推送", "pos": [535, 225], "size": [250, 88], "sources": [{ "path": "server/cmd/server/router.go", "line": 368, "label": "HTTP 与 WebSocket 路由" }] },
+    { "id": "postgresStore", "type": "database", "label": "PostgreSQL", "sublabel": "业务数据 · 任务与消息", "pos": [1080, 225], "size": [255, 88], "sources": [{ "path": "docker-compose.yml", "line": 4, "label": "数据库服务和数据卷" }] },
+    { "id": "redisRelay", "type": "messagebus", "label": "Redis / Valkey", "sublabel": "可选：实时转发 · 限流 · 租约", "pos": [1080, 75], "size": [255, 88], "sources": [{ "path": ".env.example", "line": 386, "label": "可选 Redis 配置" }] },
+    { "id": "fileStore", "type": "cloud", "label": "附件存储", "sublabel": "S3 兼容存储或本地目录", "pos": [1080, 365], "size": [255, 88], "sources": [{ "path": "server/cmd/server/router.go", "line": 376, "label": "存储后端选择" }] },
+    { "id": "localDaemon", "type": "backend", "label": "本地 daemon", "sublabel": "领取任务 · 准备工作目录 · 上报", "pos": [535, 525], "size": [250, 88], "sources": [{ "path": "server/internal/daemon/daemon.go", "line": 4788, "label": "领取任务" }] },
+    { "id": "agentProcess", "type": "external", "label": "Agent CLI 子进程", "sublabel": "Codex · Claude Code · Cursor 等", "pos": [1080, 525], "size": [255, 88], "sources": [{ "path": "server/pkg/agent/agent.go", "line": 18, "label": "执行协议接口" }] }
+  ],
+  "connections": [
+    { "from": "webClient", "to": "apiServer", "label": "HTTP API / WS", "variant": "emphasis" },
+    { "from": "desktopClient", "to": "apiServer", "label": "HTTP API / WS", "labelDx": -95, "labelDy": 62 },
+    { "from": "mobileClient", "to": "apiServer", "label": "HTTP API / WS" },
+    { "from": "apiServer", "to": "postgresStore", "label": "SQL / pgx", "variant": "emphasis", "labelDx": 90 },
+    { "from": "apiServer", "to": "redisRelay", "label": "可选：事件与租约", "variant": "dashed" },
+    { "from": "apiServer", "to": "fileStore", "label": "附件读写" },
+    { "from": "localDaemon", "to": "apiServer", "label": "WS 领任务 / HTTP 上报", "variant": "emphasis" },
+    { "from": "localDaemon", "to": "agentProcess", "label": "本机启动 / 协议流", "variant": "emphasis" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "七个主要角色", "items": ["Web、桌面、移动三个客户端；Go API；PostgreSQL；本地 daemon；Agent CLI。", "共享 core/ui/views 是代码包，不作为独立运行服务计数。"] },
+    { "dot": "emerald", "title": "任务执行", "items": ["daemon 在执行机器上领取任务，并启动选定的 Agent CLI。", "API 保存任务状态和消息，再经 WebSocket 向客户端推送变化。"] },
+    { "dot": "amber", "title": "支撑依赖", "items": ["Redis / Valkey 按部署需要启用；业务数据仍由 PostgreSQL 持久化。", "附件文件使用 S3 兼容存储或本地目录，元数据保存在 PostgreSQL。"] }
+  ]
+}
