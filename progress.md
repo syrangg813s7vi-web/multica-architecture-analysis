@@ -1,5 +1,7 @@
 # Progress
 
+- 2026-09-17: Pages built publication commit `983473b413d46d18142c54a20c0bc6aa6f7bbbd9`. Live homepage, diagram HTML, PNG preview, and JSON returned HTTP 200; live HTML/JSON hashes matched source. Browser followed the new homepage link. Default domain-root favicon request returned 404, with no impact on diagram content. Restore drill: managed Pages rebuild from versioned Git inputs succeeded; a separate clean-machine restoration was not run.
+
 - 2026-09-17: Added homepage navigation, diagram HTML/JSON, preview, and recovery documentation. Local link, privacy, whitespace, browser navigation, mobile viewport, desktop diagram, and console checks passed. Publishing next.
 
 - 2026-09-17: Started TIN-734. Selected the existing static Pages site, preserved its original system overview diagram, and added the validated runtime component diagram under a distinct path. Publication and live verification are pending.

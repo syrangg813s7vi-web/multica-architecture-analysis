@@ -2,6 +2,8 @@
 
 ## Runtime component diagram
 
+- GitHub Pages built publication commit `983473b413d46d18142c54a20c0bc6aa6f7bbbd9`. The live homepage, diagram, preview, and JSON returned HTTP 200; live HTML and JSON hashes match the validated local artifacts.
+- Browser navigation from the live homepage opened the new diagram. The only observed console error was a default `/favicon.ico` request at the domain root, unrelated to the diagram; the project-site favicon file remains available under its project path.
 - The existing site already has a broader system overview diagram, so the new runtime view uses a distinct URL and leaves earlier diagrams unchanged.
 - The Archify HTML and JSON hashes match the validated source artifacts; the PNG preview is versioned with them.
 - The static homepage link reaches the interactive diagram in Chromium at mobile width. The diagram renders at desktop width with no browser console errors; local HTML and PNG endpoints return HTTP 200.
